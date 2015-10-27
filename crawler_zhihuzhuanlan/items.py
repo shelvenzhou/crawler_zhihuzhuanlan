@@ -8,7 +8,5 @@
 import scrapy
 
 
-class CrawlerZhihuzhuanlanItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class ColumnItem(scrapy.Item):
+    column_name = scrapy.Field()

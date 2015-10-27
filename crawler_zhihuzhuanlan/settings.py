@@ -14,6 +14,8 @@ BOT_NAME = 'crawler_zhihuzhuanlan'
 SPIDER_MODULES = ['crawler_zhihuzhuanlan.spiders']
 NEWSPIDER_MODULE = 'crawler_zhihuzhuanlan.spiders'
 
+DOWNLOAD_DELAY = 2
+RANDOMIZE_DOWNLOAD_DELAY = True
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'crawler_zhihuzhuanlan (+http://www.yourdomain.com)'
