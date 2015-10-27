@@ -61,9 +61,9 @@ NEWSPIDER_MODULE = 'crawler_zhihuzhuanlan.spiders'
 
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'crawler_zhihuzhuanlan.pipelines.SomePipeline': 300,
-#}
+ITEM_PIPELINES = {
+    # 'crawler_zhihuzhuanlan.pipelines.DBPipeline': 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -83,3 +83,9 @@ NEWSPIDER_MODULE = 'crawler_zhihuzhuanlan.spiders'
 #HTTPCACHE_DIR='httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES=[]
 #HTTPCACHE_STORAGE='scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+
+MONGODB_HOST = '127.0.0.1'
+MONGODB_PORT = 27017
+MONGODB_DBNAME = 'zhihu'
+MONGODB_DOCNAME = 'Column'

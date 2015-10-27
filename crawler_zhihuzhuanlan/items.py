@@ -8,7 +8,12 @@
 import scrapy
 
 
-class CrawlerZhihuzhuanlanItem(scrapy.Item):
+class ColumnItem(scrapy.Item):
     # define the fields for your item here like:
     # name = scrapy.Field()
+    followersCount = scrapy.Field()
+    postsCount = scrapy.Field()
+    name = scrapy.Field()
+    slug = scrapy.Field()
+
     pass
