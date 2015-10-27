@@ -9,4 +9,9 @@ import scrapy
 
 
 class ColumnItem(scrapy.Item):
-    column_name = scrapy.Field()
+    # define the fields for your item here like:
+    # name = scrapy.Field()
+    followersCount = scrapy.Field()
+    postsCount = scrapy.Field()
+    name = scrapy.Field()
+    slug = scrapy.Field()
