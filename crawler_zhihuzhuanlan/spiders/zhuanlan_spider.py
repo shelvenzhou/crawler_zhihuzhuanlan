@@ -3,8 +3,8 @@ import json
 from scrapy.conf import settings
 import pymongo
 from bs4 import BeautifulSoup
-from columns import ZhihuClient
-# from crawler_zhihuzhuanlan.items import ColumnItem
+from utils import ZhihuClient,MongoHelper
+from utils.common import *
 
 class ZhihuColumnSpider(scrapy.Spider):
         name = "zhihuColumn"
@@ -14,34 +14,29 @@ class ZhihuColumnSpider(scrapy.Spider):
         # def __init__(self, name=None, **kwargs):
         #     super(zhihuColumnSpider, self).__init__()
 
-        #mongodb init
-        host = settings['MONGODB_HOST']
-        port = settings['MONGODB_PORT']
-        dbName = settings['MONGODB_DBNAME']
-        client = pymongo.MongoClient(host=host, port=port)
-        tdb = client[dbName]
-        post = tdb[settings['MONGODB_DOCNAME']]
 
+        db = MongoHelper()
         #client init
         client = ZhihuClient('cookies.json')
 
         def parse(self, response):
             colJson = json.loads(response.body)
-            self.post.insert(colJson)
-            # item = ColumnItem()
-            # item['followersCount'] = colJson['followersCount']
-            # item['name'] = colJson['name']
-            # item['postsCount'] = colJson['postsCount']
-            # item['slug'] = colJson['slug']
-            # yield item
-            print colJson['slug']
+            self.db.saveColumn(colJson)
+            postsCount = colJson[ "postsCount"]
+            slug = colJson["slug"]
+            self.client._session.headers.update(Host='zhuanlan.zhihu.com')
+            for offset in range(0, (postsCount - 1) // 10 + 1):
+                posts = self.client._session.get(Column_Posts_Data.format(slug, offset * 10)).json()
+                for post in posts:
+                    self.db.savePost(post)
+            self.client._session.headers.update(Host='www.zhihu.com')
             creator = colJson['creator']['slug']
-            creatorUrl = 'http://www.zhihu.com/people/' + creator + '/columns/followed'
+            creatorUrl = UserColFollowed_URL.format(creator)
             soup = BeautifulSoup(self.client._session.get(creatorUrl).text)
             column_tags = soup.find_all('div', class_='zm-profile-section-item zg-clear')
             if column_tags is None:
                 return
             for column_tag in column_tags:
                 zhuanlanUrl = column_tag.div.a['href']
-                apiUrl = 'http://zhuanlan.zhihu.com/api/columns/' + zhuanlanUrl.split('/')[-1]
+                apiUrl = Column_API + '/' + zhuanlanUrl.split('/')[-1]
                 yield scrapy.Request(apiUrl, callback=self.parse)

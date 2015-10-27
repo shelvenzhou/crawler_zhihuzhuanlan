@@ -1,15 +1,10 @@
 import requests
 import os
 import json
+from .common import *
 
 class ZhihuClient:
     def __init__(self, cookies=None):
-        Default_Header = {'X-Requested-With': 'XMLHttpRequest',
-                           'Referer': 'http://www.zhihu.com',
-                           'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; '
-                                        'rv:39.0) Gecko/20100101 Firefox/39.0',
-                           'Host': 'www.zhihu.com'}
-
         self._session = requests.Session()
         self._session.headers.update(Default_Header)
         if cookies is not None:
