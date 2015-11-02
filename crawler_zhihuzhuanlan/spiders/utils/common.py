@@ -11,5 +11,5 @@ Column_Data = Column_API + '/{0}'
 Column_Posts_Data = Column_API + '/{0}/posts?limit=10&offset={1}'
 UserColFollowed_URL = Zhihu_URL + '/people/{0}/columns/followed'
 UserFolloweers_URL = Zhihu_URL + '/people/{0}/followees'
+UserTopics_URL = Zhihu_URL + '/people/{0}/topics'
 
-COOKIES = open('cookies.json').read()

@@ -30,7 +30,9 @@ class UserItem(scrapy.Item):
     followees = scrapy.Field()
     followers = scrapy.Field()
     columns_followed = scrapy.Field()
+    columns_followed_num = scrapy.Field()
     topics = scrapy.Field()
+    topics_num = scrapy.Field()
     page_viewed = scrapy.Field()
 
 

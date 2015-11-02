@@ -9,18 +9,18 @@ import json
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 
-class DBPipeline(object):
+class UserDBPipeline(object):
     def __init__(self):
         host = settings['MONGODB_HOST']
         port = settings['MONGODB_PORT']
         dbName = settings['MONGODB_DBNAME']
         client = pymongo.MongoClient(host=host, port=port)
         tdb = client[dbName]
-        self.post = tdb[settings['MONGODB_DOCNAME']]
+        self._userdb = tdb['User']
 
     def process_item(self, item, spider):
-        colInfo = dict(item)
-        self.post.insert(colInfo)
+        itemInfo = dict(item)
+        self._userdb.insert(itemInfo)
         return item
 
 class JsonWriterPipeline(object):

@@ -64,7 +64,7 @@ RANDOMIZE_DOWNLOAD_DELAY = True
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    # 'crawler_zhihuzhuanlan.pipelines.DBPipeline': 300,
+    # 'crawler_zhihuzhuanlan.pipelines.UserDBPipeline': 300,
     'crawler_zhihuzhuanlan.pipelines.JsonWriterPipeline': 300,
 }
 
@@ -92,3 +92,4 @@ MONGODB_HOST = '127.0.0.1'
 MONGODB_PORT = 27017
 MONGODB_DBNAME = 'zhihu'
 
+COOKIES = open('cookies2.json').read()

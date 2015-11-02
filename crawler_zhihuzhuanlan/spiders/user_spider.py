@@ -1,4 +1,5 @@
 import scrapy
+from scrapy.conf import settings
 import json
 
 from utils import ZhihuClient
@@ -11,7 +12,7 @@ class ZhihuUserSpider(scrapy.Spider):
         start_urls = [
                 'http://www.zhihu.com/explore',
                                             ]
-        cookies = json.loads(COOKIES)
+        cookies = json.loads(settings['COOKIES'])
 
         def parse(self, response):
             for href in response.xpath('//h3[@class="zm-item-answer-author-wrap"]/a/@href'):
@@ -38,7 +39,7 @@ class ZhihuUserSpider(scrapy.Spider):
             item['skilled_topics'] = list()
             for h in response.xpath('//div[@class="zm-profile-section-list zg-clear"]/div'):
                 title = h.xpath('a/@title').extract_first()
-                href = h.xpath('a/@href').extract_first()
+                href = h.xpath('a/@href').extract_first().split('/')[-1]
                 # item['skilled_topics'].append((title,href))
                 item['skilled_topics'].append(href)
 
@@ -48,18 +49,39 @@ class ZhihuUserSpider(scrapy.Spider):
 
             for r in response.xpath('//div[@class="zm-profile-side-section-title"]/a'):
                 if 'columns' in r.xpath('@href').extract_first().encode('utf-8'):
-                    item['columns_followed'] = filter(str.isdigit,r.xpath('strong/text()').extract_first().encode("utf-8"))
+                    item['columns_followed_num'] = filter(str.isdigit,r.xpath('strong/text()').extract_first().encode("utf-8"))
                 elif 'topics' in r.xpath('@href').extract_first().encode('utf-8'):
-                     item['topics'] = filter(str.isdigit,r.xpath('strong/text()').extract_first().encode("utf-8"))
+                     item['topics_num'] = filter(str.isdigit,r.xpath('strong/text()').extract_first().encode("utf-8"))
 
             item['page_viewed'] = response.xpath('//div[@class="zm-side-section-inner"]/span[@class="zg-gray-normal"]/strong/text()').extract_first()
             # print json.dumps(dict(item))
-            yield item
+            yield scrapy.Request(UserColFollowed_URL.format(slug), callback=self.parse_columns_followed,cookies=self.cookies, meta={'item':item,'slug':slug},priority=10)
 
 
         def parse_followees(self, response):
             # print "parse_followees: " + response.url
             for r in response.xpath('//div[@class="zm-profile-card zm-profile-section-item zg-clear no-hovercard"]'):
                 href = r.xpath('div[@class="zm-list-content-medium"]/h2/a/@href').extract_first()
-                print "\nhref: " + href
+                # print "\nhref: " + href
                 yield scrapy.Request(href, callback=self.parse_user)
+
+        def parse_columns_followed(self, response):
+            slug = response.meta['slug']
+            item = response.meta['item']
+            item['columns_followed'] = list()
+            for r in response.xpath('//div[@class="zm-profile-section-item zg-clear"]'):
+                href = r.xpath('a/@href').extract_first()
+                col_slug = href.split('/')[-1]
+                item['columns_followed'].append(col_slug)
+            # yield scrapy.Request(UserTopics_URL.format(slug), callback=self.parse_topics,cookies=self.cookies, meta={'item':item},priority=20)
+            yield item
+
+        # def parse_topics(self, response):
+        #     item = response.meta['item']
+        #     item['topics'] = list()
+        #     for r in response.xpath('//div[@class="zm-profile-section-item zg-clear"]'):
+        #         href = r.xpath('a/@href').extract_first()
+        #         slug = href.split('/')[-1]
+        #         item['topics'].append(slug)
+        #     yield item
+
