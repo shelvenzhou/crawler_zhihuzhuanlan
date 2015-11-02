@@ -1,5 +1,6 @@
 from scrapy.conf import settings
 import pymongo
+import json
 # -*- coding: utf-8 -*-
 
 # Define your item pipelines here
@@ -20,4 +21,14 @@ class DBPipeline(object):
     def process_item(self, item, spider):
         colInfo = dict(item)
         self.post.insert(colInfo)
+        return item
+
+class JsonWriterPipeline(object):
+
+    def __init__(self):
+        self.file = open('users.txt', 'wb')
+
+    def process_item(self, item, spider):
+        line = json.dumps(dict(item)) + "\n"
+        self.file.write(line)
         return item

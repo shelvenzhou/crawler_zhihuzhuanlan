@@ -17,3 +17,21 @@ class ColumnItem(scrapy.Item):
     slug = scrapy.Field()
 
     pass
+
+class UserItem(scrapy.Item):
+    id = scrapy.Field()
+    agree = scrapy.Field()
+    thanks = scrapy.Field()
+    asks = scrapy.Field()
+    answers = scrapy.Field()
+    posts = scrapy.Field()
+    collections = scrapy.Field()
+    logs = scrapy.Field()
+    skilled_topics = scrapy.Field()
+    followees = scrapy.Field()
+    followers = scrapy.Field()
+    columns_followed = scrapy.Field()
+    topics = scrapy.Field()
+    page_viewed = scrapy.Field()
+
+

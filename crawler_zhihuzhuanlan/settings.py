@@ -63,6 +63,7 @@ NEWSPIDER_MODULE = 'crawler_zhihuzhuanlan.spiders'
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     # 'crawler_zhihuzhuanlan.pipelines.DBPipeline': 300,
+    'crawler_zhihuzhuanlan.pipelines.JsonWriterPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
