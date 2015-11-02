@@ -15,7 +15,6 @@ class ColumnItem(scrapy.Item):
     postsCount = scrapy.Field()
     name = scrapy.Field()
     slug = scrapy.Field()
-
     pass
 
 class UserItem(scrapy.Item):
