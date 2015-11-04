@@ -54,6 +54,7 @@ class ZhihuUserSpider(scrapy.Spider):
             follow = response.xpath('//div[@class="zm-profile-side-following zg-clear"]/a/strong/text()').extract()
             item['followees_num'] = follow[0]
             item['followers_num'] = follow[1]
+            item['followees'] = list()
 
             item['columns_followed_num'] = 0
             item['topics_num'] = 0
@@ -85,37 +86,37 @@ class ZhihuUserSpider(scrapy.Spider):
                 params = {"method":"next", "params":json.dumps(p,separators=(',',':')),'_xsrf':item['xsrf']}
                 yield scrapy.http.FormRequest(ProfileFollowedColumnsListV2, formdata = params , method='GET', callback=self.parse_columns_followed,cookies=self.cookies, meta={'item':item,'params':p},priority=10)
             else:
-                # offset = 0
-                # params = {"start":"0","offset":offset,'_xsrf':item['xsrf']}
-                # yield scrapy.http.FormRequest(UserTopics_URL.format(slug), callback=self.parse_topics,cookies=self.cookies, meta={'item':item,'offset':offset},priority=20)
-                yield item
-            # slug = response.meta['slug']
-            # item = response.meta['item']
-            # item['columns_followed'] = list()
-            # for r in response.xpath('//div[@class="zm-profile-section-item zg-clear"]'):
-            #     href = r.xpath('a/@href').extract_first()
-            #     col_slug = href.split('/')[-1]
-            #     item['columns_followed'].append(col_slug)
-            # yield scrapy.Request(UserTopics_URL.format(slug), callback=self.parse_topics,cookies=self.cookies, meta={'item':item, 'slug':slug},priority=20)
+                p = {"offset":0, "order_by":"created", "hash_id":item['hash_id']}
+                params = {"method":"next", "params":json.dumps(p,separators=(',',':')),'_xsrf':item['xsrf']}
+                yield scrapy.http.FormRequest(ProfileFolloweesListV2 , formdata = params , method='GET', callback=self.parse_followees,cookies=self.cookies, meta={'item':item,'params':p},priority=10)              
 
 
         def parse_topics(self, response):
-            slug = response.meta['slug']
             item = response.meta['item']
             for r in response.xpath('//div[@class="zm-profile-section-item zg-clear"]'):
                 href = r.xpath('a/@href').extract_first()
                 topic_slug = href.split('/')[-1]
                 item['topics'].append(topic_slug)
-            yield scrapy.Request(UserFolloweers_URL.format(slug), callback=self.parse_followees,cookies=self.cookies, meta={'item':item, 'slug':slug})
-            # yield item
+            # yield scrapy.Request(UserFolloweers_URL.format(slug), callback=self.parse_followees,cookies=self.cookies, meta={'item':item, 'slug':slug})
+            yield item
 
         def parse_followees(self, response):
-            # print "parse_followees: " + response.url
             item = response.meta['item']
-            item['followees'] = list()
-            for r in response.xpath('//div[@class="zm-profile-card zm-profile-section-item zg-clear no-hovercard"]'):
-                href = r.xpath('div[@class="zm-list-content-medium"]/h2/a/@href').extract_first()
-                # print "\nhref: " + href
-                item['followees'].append(href.split('/')[-1])
-                yield scrapy.Request(href, callback=self.parse_user)
-            yield item
+            if response.body != '':
+                for r in response.xpath('//div[@class="zm-profile-card zm-profile-section-item zg-clear no-hovercard"]'):
+                    href = r.xpath('div[@class="zm-list-content-medium"]/h2/a/@href').extract_first()
+                    item['followees'].append(href.split('/')[-1])
+                    yield scrapy.Request(href, callback=self.parse_user)
+                p = response.meta['params']
+                p["offset"] = p["offset"]+20 if p["offset"]+20 < item['followees_num'] else item['followees_num']
+                params = {"method":"next", "params":json.dumps(p,separators=(',',':')),'_xsrf':item['xsrf']}
+                yield scrapy.http.FormRequest(ProfileFolloweesListV2 , formdata = params , method='GET', callback=self.parse_followees,cookies=self.cookies, meta={'item':item,'params':p},priority=10)              
+            else:
+                yield scrapy.Request(UserTopics_URL.format(item['id']), callback=self.parse_topics,cookies=self.cookies, meta={'item':item})
+   
+
+            # for r in response.xpath('//div[@class="zm-profile-card zm-profile-section-item zg-clear no-hovercard"]'):
+            #     href = r.xpath('div[@class="zm-list-content-medium"]/h2/a/@href').extract_first()
+            #     item['followees'].append(href.split('/')[-1])
+            #     yield scrapy.Request(href, callback=self.parse_user)
+            # yield item

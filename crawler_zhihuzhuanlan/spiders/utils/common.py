@@ -14,4 +14,4 @@ UserFolloweers_URL = Zhihu_URL + '/people/{0}/followees'
 UserTopics_URL = Zhihu_URL + '/people/{0}/topics'
 
 ProfileFollowedColumnsListV2 = 'http://www.zhihu.com/node/ProfileFollowedColumnsListV2'
-
+ProfileFolloweesListV2 = 'http://www.zhihu.com/node/ProfileFolloweesListV2'
