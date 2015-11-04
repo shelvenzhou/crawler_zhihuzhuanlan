@@ -16,7 +16,7 @@ class UserDBPipeline(object):
         dbName = settings['MONGODB_DBNAME']
         client = pymongo.MongoClient(host=host, port=port)
         tdb = client[dbName]
-        self._userdb = tdb['User']
+        self._userdb = tdb['User2']
 
     def process_item(self, item, spider):
         itemInfo = dict(item)
@@ -26,7 +26,7 @@ class UserDBPipeline(object):
 class JsonWriterPipeline(object):
 
     def __init__(self):
-        self.file = open('users.txt', 'wb')
+        self.file = open('users2.txt', 'wb')
 
     def process_item(self, item, spider):
         line = json.dumps(dict(item)) + "\n"

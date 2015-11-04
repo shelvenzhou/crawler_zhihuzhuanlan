@@ -18,7 +18,9 @@ class ColumnItem(scrapy.Item):
     pass
 
 class UserItem(scrapy.Item):
+    hash_id = scrapy.Field()
     id = scrapy.Field()
+    xsrf = scrapy.Field()
     agree = scrapy.Field()
     thanks = scrapy.Field()
     asks = scrapy.Field()
@@ -27,8 +29,9 @@ class UserItem(scrapy.Item):
     collections = scrapy.Field()
     logs = scrapy.Field()
     skilled_topics = scrapy.Field()
+    followees_num = scrapy.Field()
+    followers_num = scrapy.Field()
     followees = scrapy.Field()
-    followers = scrapy.Field()
     columns_followed = scrapy.Field()
     columns_followed_num = scrapy.Field()
     topics = scrapy.Field()

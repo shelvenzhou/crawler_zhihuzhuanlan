@@ -14,7 +14,7 @@ BOT_NAME = 'crawler_zhihuzhuanlan'
 SPIDER_MODULES = ['crawler_zhihuzhuanlan.spiders']
 NEWSPIDER_MODULE = 'crawler_zhihuzhuanlan.spiders'
 
-DOWNLOAD_DELAY = 2
+# DOWNLOAD_DELAY = 2
 RANDOMIZE_DOWNLOAD_DELAY = True
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
@@ -64,7 +64,7 @@ RANDOMIZE_DOWNLOAD_DELAY = True
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    # 'crawler_zhihuzhuanlan.pipelines.UserDBPipeline': 300,
+    'crawler_zhihuzhuanlan.pipelines.UserDBPipeline': 300,
     'crawler_zhihuzhuanlan.pipelines.JsonWriterPipeline': 300,
 }
 
