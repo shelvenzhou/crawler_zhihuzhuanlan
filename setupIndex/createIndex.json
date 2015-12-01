@@ -1,0 +1,18 @@
+{
+    "mappings" : {
+        "resource" : {
+            "dynamic": false,
+            "properties" : {
+                "post": {
+                    "_all": {
+                        "indexAnalyzer": "ik",
+                        "searchAnalyzer": "ik",
+                        "term_vector": "no",
+                        "store": "false"
+                    }
+                }
+            }
+        }
+    }
+}
+

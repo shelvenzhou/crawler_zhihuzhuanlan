@@ -1,0 +1,18 @@
+{
+    "type": "mongodb",
+    "mongodb": {
+        "servers": [
+        { "host": "127.0.0.1", "port": 27017 }
+        ],
+        "db": "zhihu",
+        "collection": "Post",
+        "options": {
+            "secondary_read_preference": true 
+        },
+        "gridfs": false
+    },
+    "index": {
+        "name": "post",
+        "type": "post"
+        }
+}
