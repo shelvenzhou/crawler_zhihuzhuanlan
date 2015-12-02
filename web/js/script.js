@@ -26,8 +26,16 @@ MyZhihuColumn.factory('postService',
         var search = function(term, offset){
             var deferred = $q.defer();
             var query = {
-                "match": {
-                    "_all": term
+                "function_score":{
+                    "query":{
+                        "multi_match": {
+                            "query": term,
+                            "fields":["title","content"]
+                        }
+                     },
+                     "script_score":{
+                         "script":"_score * log(1+doc['likesCount'].value)"
+                     }
                 }
             };
             var highlight = {
