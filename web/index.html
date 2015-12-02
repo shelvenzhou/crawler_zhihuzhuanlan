@@ -24,7 +24,7 @@
           <div class='no-posts' ng-hide='posts.length'>No results</div>
           <article class='post' ng-cloak ng-repeat='post in posts'>
             <h2>
-              <a ng-href='http://zhuanlan.zhihu.com/{{post.url}}'>{{post.title}}</a>
+              <a ng-href='http://zhuanlan.zhihu.com{{post.url}}'>{{post.title}}</a>
             </h2>
             <div ng-repeat="h in post.highlight" ng-bind-html="h">
               {{h}}
@@ -35,14 +35,6 @@
             <a ng-click='loadMore()'>More...</a>
           </div>
         </section>
-<!--
-        <footer>
-          Made By
-          <a href='http://adambard.com/'>Handsome Web Developer Adam Bard,</a>
-          powered by
-          <a href='http://openrecip.es/'>OpenRecipes</a>
-        </footer>
--->
       </div>
     </div>
     <script src="js/angular.js" type="text/javascript"></script>
